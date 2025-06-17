@@ -297,6 +297,6 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ---
 
-**Made with ❤️ and ☕ by [Your Name]**
+**Made with ❤️ and ☕ by Harald Fauland**
 
 > 💡 **Tip**: Star this repository if you found it helpful!
