@@ -1,38 +1,302 @@
-# sv
+# 💰 Plemperer - Personal Expense Tracker
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+A modern, responsive expense tracking application built with SvelteKit 5. Track your daily expenses with ease, featuring dark/light mode, internationalization support, and a clean, intuitive interface.
 
-## Creating a project
+## 🌟 Features
 
-If you're seeing this, you've probably already done this step. Congrats!
+- **💸 Expense Management**: Add, edit, and track your daily expenses
+- **📅 Smart Date Handling**: Integrated date picker with locale support
+- **🏷️ Category Management**: Organize expenses with customizable categories
+- **🌍 Internationalization**: German and English locale support for dates and currency
+- **🌙 Dark/Light Mode**: Toggle between themes with system preference detection
+- **📱 Responsive Design**: Works seamlessly on desktop and mobile devices
+- **💰 Smart Amount Input**: Supports both English (4.50) and German (4,50) number formats
+- **✏️ Edit Functionality**: Modify existing expenses with one click
+- **📊 Monthly Organization**: Expenses are organized by month for easy tracking
+- **💾 File-based Storage**: Simple JSON file storage (no database required)
 
-```bash
-# create a new project in the current directory
-npx sv create
+## 🛠️ Tech Stack
 
-# create a new project in my-app
-npx sv create my-app
+### Frontend
+
+- **[SvelteKit 5](https://svelte.dev/)** - Modern web framework with runes
+- **[Tailwind CSS v4](https://tailwindcss.com/)** - Utility-first CSS framework
+- **[Flatpickr](https://flatpickr.js.org/)** - Lightweight date picker
+
+### Backend
+
+- **[SvelteKit API Routes](https://kit.svelte.dev/docs/routing#server)** - Server-side API endpoints
+- **Node.js File System** - JSON file-based data storage
+
+### Development Tools
+
+- **[Vite](https://vitejs.dev/)** - Fast build tool and dev server
+- **JavaScript/ES6+** - Modern JavaScript features
+- **CSS Custom Properties** - For theming and dark mode
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18+ and npm (or pnpm/yarn)
+- Modern web browser
+
+### Installation
+
+1. **Clone the repository**
+
+   ```bash
+   git clone <your-repo-url>
+   cd plemperer
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   npm install
+   # or
+   pnpm install
+   # or
+   yarn install
+   ```
+
+3. **Start the development server**
+
+   ```bash
+   npm run dev
+   # or
+   npm run dev -- --open  # Opens browser automatically
+   ```
+
+4. **Access the application**
+   - Open your browser and navigate to `http://localhost:5173`
+   - The app will create necessary data files automatically
+
+## 📁 Project Structure
+
+```
+plemperer/
+├── src/
+│   ├── lib/
+│   │   ├── components/          # Reusable Svelte components
+│   │   │   ├── DatePicker.svelte
+│   │   │   ├── ExpenseForm.svelte
+│   │   │   ├── ExpensesTable.svelte
+│   │   │   ├── MonthPicker.svelte
+│   │   │   └── ThemeToggle.svelte
+│   │   ├── stores/              # Svelte stores
+│   │   │   └── theme.js
+│   │   └── utils/               # Utility functions
+│   │       └── locale.js
+│   ├── routes/                  # SvelteKit routes
+│   │   ├── api/                 # API endpoints
+│   │   │   ├── categories/
+│   │   │   └── expenses/
+│   │   ├── +layout.svelte       # Global layout
+│   │   └── +page.svelte         # Main page
+│   ├── app.html                 # HTML template
+│   └── app.css                  # Global styles
+├── static/                      # Static assets
+├── categories.json              # Categories data
+├── expenses_YYYY_MM.json        # Monthly expense data
+└── package.json
 ```
 
-## Developing
+## 🚀 Deployment
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+### 1. Direct Deployment (Static)
 
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
+Build the application for static deployment:
 
 ```bash
 npm run build
 ```
 
-You can preview the production build with `npm run preview`.
+The built files will be in the `build` directory. Deploy to any static hosting service:
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+- **Netlify**: Drag and drop the `build` folder
+- **Vercel**: Connect your repository and deploy automatically
+- **GitHub Pages**: Use GitHub Actions to deploy the `build` folder
+
+### 2. Node.js Server Deployment
+
+For server-side functionality (API routes), deploy to a Node.js hosting service:
+
+```bash
+# Build the application
+npm run build
+
+# Start the production server
+npm run preview
+```
+
+**Recommended platforms:**
+
+- **Vercel** (automatic SvelteKit support)
+- **Netlify** (with serverless functions)
+- **Railway**
+- **Render**
+- **DigitalOcean App Platform**
+
+### 3. Docker Deployment
+
+Create a `Dockerfile`:
+
+```dockerfile
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+RUN npm ci --only=production
+
+# Copy source code
+COPY . .
+
+# Build the application
+RUN npm run build
+
+EXPOSE 3000
+
+CMD ["node", "build"]
+```
+
+Build and run:
+
+```bash
+# Build the Docker image
+docker build -t plemperer .
+
+# Run the container
+docker run -p 3000:3000 -v $(pwd)/data:/app/data plemperer
+```
+
+### 4. Docker Compose
+
+Create a `docker-compose.yml`:
+
+```yaml
+version: "3.8"
+services:
+  plemperer:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+```
+
+Run with:
+
+```bash
+docker-compose up -d
+```
+
+## ⚙️ Configuration
+
+### Environment Variables
+
+Create a `.env` file for custom configuration:
+
+```env
+# Port for the application (default: 5173 in dev, 4173 in preview)
+PORT=3000
+
+# Data directory (default: project root)
+DATA_DIR=./data
+```
+
+### Categories
+
+Edit `categories.json` to customize expense categories:
+
+```json
+[
+  "Food & Dining",
+  "Transportation",
+  "Shopping",
+  "Entertainment",
+  "Bills & Utilities",
+  "Healthcare",
+  "Travel",
+  "Other"
+]
+```
+
+## 🔧 Development
+
+### Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run prepare` - Prepare SvelteKit
+
+### Code Style
+
+The project follows standard JavaScript/Svelte conventions:
+
+- Use Svelte 5 runes (`$state`, `$props`, `$effect`)
+- Follow Tailwind CSS utility-first approach
+- Use semantic HTML and proper accessibility attributes
+
+### Adding New Features
+
+1. **Components**: Add new components in `src/lib/components/`
+2. **API Routes**: Create new endpoints in `src/routes/api/`
+3. **Utilities**: Add helper functions in `src/lib/utils/`
+4. **Styling**: Use Tailwind classes and CSS custom properties
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+1. **Port already in use**
+
+   ```bash
+   # Kill process on port 5173
+   npx kill-port 5173
+   ```
+
+2. **Data files not created**
+
+   - Ensure write permissions in the project directory
+   - Check that the `categories.json` file exists
+
+3. **Date picker not working**
+
+   - Ensure Flatpickr is properly installed
+   - Check browser console for JavaScript errors
+
+4. **Dark mode not persisting**
+   - Check if localStorage is available
+   - Ensure JavaScript is enabled
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+## 🙏 Acknowledgments
+
+- [SvelteKit](https://kit.svelte.dev/) for the amazing framework
+- [Tailwind CSS](https://tailwindcss.com/) for the utility-first CSS approach
+- [Flatpickr](https://flatpickr.js.org/) for the date picker component
+- The Svelte community for continuous inspiration
+
+---
+
+**Made with ❤️ and ☕ by [Your Name]**
+
+> 💡 **Tip**: Star this repository if you found it helpful!
