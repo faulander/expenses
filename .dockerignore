@@ -1,0 +1,17 @@
+node_modules
+.svelte-kit
+build
+.git
+.gitignore
+README.md
+.env
+.env.*
+test
+*.test.js
+*.spec.js
+.vitest
+coverage
+.DS_Store
+Thumbs.db
+.vscode
+.idea
