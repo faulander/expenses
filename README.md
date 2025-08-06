@@ -87,20 +87,28 @@ plemperer/
 │   │   ├── stores/              # Svelte stores
 │   │   │   └── theme.js
 │   │   └── utils/               # Utility functions
-│   │       └── locale.js
+│   │       ├── locale.js
+│   │       ├── dataDirectory.js # Data directory utilities
+│   │       └── migration.js     # Data migration utilities
 │   ├── routes/                  # SvelteKit routes
 │   │   ├── api/                 # API endpoints
 │   │   │   ├── categories/
 │   │   │   └── expenses/
 │   │   ├── +layout.svelte       # Global layout
 │   │   └── +page.svelte         # Main page
+│   ├── hooks.server.js          # Server-side hooks (migration)
 │   ├── app.html                 # HTML template
 │   └── app.css                  # Global styles
 ├── static/                      # Static assets
-├── categories.json              # Categories data
-├── expenses_YYYY_MM.json        # Monthly expense data
+├── data/                        # 📂 Data directory (configurable)
+│   ├── categories.json          # Categories data
+│   └── expenses_YYYY_MM.json    # Monthly expense data
 └── package.json
 ```
+
+### Data Directory
+
+All application data is stored in the `./data/` directory by default. This can be customized using the `DATA_DIR` environment variable for flexible deployment scenarios.
 
 ## 🚀 Deployment
 
@@ -168,25 +176,25 @@ Build and run:
 # Build the Docker image
 docker build -t plemperer .
 
-# Run the container
+# Run the container with data volume mount
 docker run -p 3000:3000 -v $(pwd)/data:/app/data plemperer
 ```
 
 ### 4. Docker Compose
 
-Create a `docker-compose.yml`:
+Use the provided `docker-compose.yml`:
 
 ```yaml
-version: "3.8"
 services:
   plemperer:
     build: .
     ports:
       - "3000:3000"
     volumes:
-      - ./data:/app/data
+      - ./data:/app/data          # Mount local data directory
     environment:
       - NODE_ENV=production
+      - DATA_DIR=/app/data        # Optional: customize data directory path
     restart: unless-stopped
 ```
 
@@ -206,13 +214,36 @@ Create a `.env` file for custom configuration:
 # Port for the application (default: 5173 in dev, 4173 in preview)
 PORT=3000
 
-# Data directory (default: project root)
+# Data directory path (default: ./data)
+# Can be absolute (/custom/path) or relative (./custom-data)
 DATA_DIR=./data
+```
+
+#### DATA_DIR Configuration
+
+The `DATA_DIR` environment variable allows you to customize where application data is stored:
+
+- **Default**: `./data` (relative to project root)
+- **Absolute paths**: `/custom/absolute/path`
+- **Relative paths**: `./custom-data` or `../shared/data`
+- **Docker**: Set to `/app/data` and use volume mounts for persistence
+
+**Examples:**
+
+```bash
+# Development with custom data directory
+DATA_DIR=./my-expenses npm run dev
+
+# Production with absolute path
+DATA_DIR=/var/lib/plemperer npm start
+
+# Docker with environment variable
+docker run -e DATA_DIR=/app/data -v ./data:/app/data plemperer
 ```
 
 ### Categories
 
-Edit `categories.json` to customize expense categories:
+Edit `data/categories.json` to customize expense categories:
 
 ```json
 [
@@ -227,6 +258,8 @@ Edit `categories.json` to customize expense categories:
 ]
 ```
 
+**Note**: The categories file will be automatically created in your configured data directory on first run.
+
 ## 🔧 Development
 
 ### Available Scripts
@@ -235,6 +268,9 @@ Edit `categories.json` to customize expense categories:
 - `npm run build` - Build for production
 - `npm run preview` - Preview production build
 - `npm run prepare` - Prepare SvelteKit
+- `npm test` - Run test suite
+- `npm run test:ui` - Run tests with UI
+- `npm run test:run` - Run tests once
 
 ### Code Style
 
@@ -264,8 +300,9 @@ The project follows standard JavaScript/Svelte conventions:
 
 2. **Data files not created**
 
-   - Ensure write permissions in the project directory
-   - Check that the `categories.json` file exists
+   - Ensure write permissions in the data directory
+   - The application will automatically create the data directory and files
+   - Check your `DATA_DIR` environment variable if using a custom path
 
 3. **Date picker not working**
 

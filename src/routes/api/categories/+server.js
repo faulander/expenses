@@ -1,11 +1,12 @@
 import { json } from "@sveltejs/kit";
 import { readFileSync, writeFileSync, existsSync } from "fs";
-import { join } from "path";
+import { getCategoriesFilePath, ensureDataDirectory } from "$lib/utils/dataDirectory.js";
 
-const CATEGORIES_FILE = join(process.cwd(), "categories.json");
+const CATEGORIES_FILE = getCategoriesFilePath();
 
 // Initialize categories file if it doesn't exist
 if (!existsSync(CATEGORIES_FILE)) {
+  ensureDataDirectory();
   const defaultCategories = [
     "Food & Dining",
     "Transportation",
@@ -37,6 +38,7 @@ export async function POST({ request }) {
 
     if (!categories.includes(category)) {
       categories.push(category);
+      ensureDataDirectory();
       writeFileSync(CATEGORIES_FILE, JSON.stringify(categories, null, 2));
     }
 

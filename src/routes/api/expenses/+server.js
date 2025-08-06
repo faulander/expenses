@@ -1,12 +1,9 @@
 import { json } from "@sveltejs/kit";
 import { readFileSync, writeFileSync, existsSync } from "fs";
-import { join } from "path";
+import { getExpenseFilePath, ensureDataDirectory } from "$lib/utils/dataDirectory.js";
 
 function getExpenseFileName(year, month) {
-  return join(
-    process.cwd(),
-    `expenses_${year}_${month.toString().padStart(2, "0")}.json`
-  );
+  return getExpenseFilePath(year, month);
 }
 
 function loadExpenses(year, month) {
@@ -22,6 +19,7 @@ function loadExpenses(year, month) {
 }
 
 function saveExpenses(year, month, expenses) {
+  ensureDataDirectory();
   const fileName = getExpenseFileName(year, month);
   writeFileSync(fileName, JSON.stringify(expenses, null, 2));
 }

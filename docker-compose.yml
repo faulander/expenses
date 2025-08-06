@@ -7,4 +7,5 @@ services:
       - ./data:/app/data
     environment:
       - NODE_ENV=production
+      - DATA_DIR=/app/data  # Optional: customize data directory path
     restart: unless-stopped

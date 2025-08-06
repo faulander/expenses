@@ -12,6 +12,12 @@ COPY . .
 # Build the application
 RUN npm run build
 
+# Create data directory
+RUN mkdir -p /app/data
+
+# Set default environment variables
+ENV DATA_DIR=/app/data
+
 EXPOSE 3000
 
 CMD ["node", "build"]
