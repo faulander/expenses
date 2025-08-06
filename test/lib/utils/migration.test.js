@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import {
   performDataDirectoryMigration,
   isMigrationNeeded
-} from './migration.js';
+} from '../../../src/lib/utils/migration.js';
 
 describe('Migration System', () => {
   const originalEnv = process.env;

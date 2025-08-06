@@ -4,11 +4,11 @@ import {
   getExpenseFilePath, 
   getCategoriesFilePath,
   ensureDataDirectory 
-} from './dataDirectory.js';
+} from '../../../src/lib/utils/dataDirectory.js';
 import { 
   isMigrationNeeded, 
   performDataDirectoryMigration 
-} from './migration.js';
+} from '../../../src/lib/utils/migration.js';
 
 describe('Data Directory Integration', () => {
   const originalEnv = process.env;

@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { GET, POST } from './+server.js';
+import { GET, POST, PUT, DELETE } from '../../../../src/routes/api/expenses/+server.js';
 
-describe('Categories API', () => {
+describe('Expenses API', () => {
   const originalEnv = process.env;
 
   beforeEach(() => {
@@ -20,11 +20,20 @@ describe('Categories API', () => {
     it('should export POST function', () => {
       expect(typeof POST).toBe('function');
     });
+
+    it('should export PUT function', () => {
+      expect(typeof PUT).toBe('function');
+    });
+
+    it('should export DELETE function', () => {
+      expect(typeof DELETE).toBe('function');
+    });
   });
 
   describe('Environment Variable Support', () => {
     it('should support custom data directory configuration', () => {
       process.env.DATA_DIR = '/custom/test/path';
+      // Basic test that the environment variable can be set
       expect(process.env.DATA_DIR).toBe('/custom/test/path');
     });
   });

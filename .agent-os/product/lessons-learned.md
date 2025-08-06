@@ -132,13 +132,21 @@ When migrating to SQLite:
 ### Test Framework Setup
 - **Vitest** with jsdom environment provides excellent SvelteKit integration
 - **Configuration**: Use vitest.config.js with SvelteKit plugin for proper module resolution
-- **Structure**: Tests alongside source files with `.test.js` extension
+- **Structure**: ALL test files must go in dedicated `/test` directory, never alongside source files
+- **Organization**: Mirror source structure in test directory (e.g., `test/lib/utils/` for `src/lib/utils/` tests)
 
 ### SvelteKit Testing Best Practices
 - **API Testing**: For testing SvelteKit API routes (+server.js files), avoid complex mocking and focus on functional tests
-- **File Naming**: Files prefixed with + are reserved in SvelteKit - keep test files simple and avoid testing internal SvelteKit mechanics
+- **File Separation**: NEVER place test files alongside source code in SvelteKit projects - causes Vite conflicts
+- **Import Paths**: Use relative paths from `/test` directory to source files (e.g., `../../../src/lib/utils/file.js`)
 - **Module Resolution**: Use proper import paths and avoid require() in ES modules
 - **Official Guide**: https://svelte.dev/docs/svelte/testing provides best practices for testing Svelte components and SvelteKit applications
+
+### Critical Testing Rules
+- **ALWAYS** use dedicated `/test` directory structure
+- **NEVER** put `.test.js` files in `src/` directory - breaks SvelteKit routing
+- **Mirror** source directory structure in test directory for organization
+- Remove any `+` prefixes from test file names (reserved for SvelteKit routes)
 
 ### Testing Patterns That Work
 - Simple unit tests for utility functions without complex mocking

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { getDataDir } from './dataDirectory.js';
+import { getDataDir } from '../../../src/lib/utils/dataDirectory.js';
 
 describe('Environment Configuration', () => {
   const originalEnv = process.env;

@@ -3,7 +3,7 @@ import {
   getDataDir,
   getExpenseFilePath,
   getCategoriesFilePath
-} from './dataDirectory.js';
+} from '../../../src/lib/utils/dataDirectory.js';
 
 describe('Data Directory Utilities', () => {
   const originalEnv = process.env;
